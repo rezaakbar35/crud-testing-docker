@@ -1,0 +1,31 @@
+version: '3'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  to-do:
+    build: .
+    networks:
+      - app-tier
+    ports:
+      - 8010:8010
+    depends_on:
+      - dbpgsql
+    volumes:
+      - ".:/to-do/src/app"
+
+  dbpgsql:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRESS_DB
+    networks:
+      - app-tier
+    
